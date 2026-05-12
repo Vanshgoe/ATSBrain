@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Analyser</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+
+<body>
+
+  <header class="header">
+    <span cass="ats-title">Resume Analyser</span>
+    <span>Home</span>
+    <span>Template</span>
+    <span>Services</span>
+    <span>Login</span>
+    <span>Signup</span>
+  
+  </header>
+
+  <main class="main">
+    <div class="intro">
+      <h1 class="ats-title">ATS Resume Checker</h1>
+      <h3 class="ats-sub">Upload your resume with drag and drop,
+        compare it against a job description,
+        and get a polished ATS-style analysis with
+        scores, risks, keywords, and actionable rewrites. </h3>
+      <div class="ats-badge">Smart ATS Analysis</div>
+    </div>
+    <section class="section">
+      <div class="left">
+        <h2>Upload Resume</h2>
+        <div class="upload">
+          <div class="ats_drop_zone">
+            <i class="ri-upload-line upload-image"></i>
+            <p>Drag & drop your resume here</p>
+            <h3>PDF, DOCX, or TXT • or click below to browse</h3>
+            <label for="ats_resume_file" class="upload-btn">
+                 Choose File
+            </label>
+            <input type="file" id="ats_resume_file" accept=".pdf,.docx,.txt" hidden>
+          </div>
+          <p>Tip: If PDF extraction returns empty text on your server, upload DOCX or paste resume text below</p>
+        </div>
+        <div>
+          <div class="ats-field">
+            <label for="ats_resume_text">Or Paste Resume Text</label>
+            <textarea id="ats_resume_text" placeholder="Paste resume text here if you do not want to upload a file...">
+              </textarea>
+          </div>
+          <div class="ats-field">
+            <label for="ats_job_desc">Job Description (optional)</label>
+            <textarea id="ats_job_desc"
+              placeholder="Paste the job description here to detect missing keywords and improve job-match feedback..."></textarea>
+            <div class="ats-note">Adding a job description gives stronger keyword and alignment suggestions.</div>
+          </div>
+          <div>
+            <button class="check-btn">Check ATS Score</button>
+
+            <button class="reset-btn">Reset</button>
+          </div>
+          <div class="result-box">
+           </div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="info-box">
+          <h3>What You'll Get</h3>
+          <ul>
+            <li>Overall ATS-style score and grade</li>
+            <li>Section-by-section scoring breakdown</li>
+            <li>ATS risks and why they matter</li>
+            <li>Missing keyword suggestions</li>
+            <li>Ready-to-use rewrite recommendations</li>
+          </ul>
+        </div>
+        <div class="privacy">
+          <h2>Privacy</h2>
+          <p>Uploaded files are sent for parsing and analysis, and the temporary uploaded file is deleted server-side
+            after extraction.</p>
+        </div>
+      </div>
+
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Resume Analyser</p>
+    <a href="#">Linkedin</a>
+    <a href="#">Github</a>
+    <a href="#">vansh.goel.in@gmail.com</a>
+  </footer>
+  <script src="index.js"></script>
+
+</body>
+
+</html>
