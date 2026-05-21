@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Analyser</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Knewave&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <header class="header">
+    <span class="ats-title">ATSBrain</span>
+    <span>Home</span>
+    <span>Template</span>
+    <span>Services</span>
+    <span>Login</span>
+    <span>Signup</span>
+  
+  </header>
+
+  <main class="main">
+    <div class="intro">
+      <h1 class="ats-title-1">ATS Resume Checker</h1>
+      <h3 class="ats-sub">Upload your resume with drag and drop,
+        compare it against a job description,
+        and get a polished ATS-style analysis with
+        scores, risks, keywords, and actionable rewrites. </h3>
+      <div class="ats-badge">Smart ATS Analysis</div>
+    </div>
+    <section class="section">
+      <div class="left">
+        <h2>Upload Resume</h2>
+        <div class="upload">
+          <div class="ats_drop_zone">
+            <i class="ri-upload-line upload-image"></i>
+            <p>Drag & drop your resume here</p>
+            <h3>PDF, DOCX, or TXT • or click below to browse</h3>
+            <label for="ats_resume_file" class="upload-btn">
+                 Choose File
+            </label>
+            <input type="file" id="ats_resume_file" accept=".pdf,.docx,.txt" hidden>
+          </div>
+          <p>Tip: If PDF extraction returns empty text on your server, upload DOCX or paste resume text below</p>
+        </div>
+        <div>
+          <div class="ats-field">
+            <label for="ats_resume_text">Or Paste Resume Text</label>
+            <textarea id="ats_resume_text" placeholder="Paste resume text here if you do not want to upload a file...">
+              </textarea>
+          </div>
+          <div class="ats-field">
+      <label for="ats_job_desc" class="block text-sm font-semibold text-indigo-700 mb-2">Job Description(Required)</label>
+            <textarea id="ats_job_desc"
+              placeholder="Paste the job description here to detect missing keywords and improve job-match feedback..."></textarea>
+            <div class="ats-note">Adding a job description gives stronger keyword and alignment suggestions.</div>
+          </div>
+          <div>
+            <button class="check-btn">Check ATS Score</button>
+
+            <button class="reset-btn">Reset</button>
+          </div>
+<!-- Modal -->
+          <!-- MODAL -->
+
+<div id="modal" class="modal">
+
+  <div class="modal-content">
+
+    <!-- CLOSE BUTTON -->
+
+    <button id="closeBtn">
+      &times;
+    </button>
+
+    <!-- TITLE -->
+
+    <h2>
+      ATS Scan Results
+    </h2>
+
+    <p class="modal-sub">
+
+      Review the full analysis below.
+      Close this window to start a new upload.
+
+    </p>
+
+    <!-- TOP LAYOUT -->
+
+    <div class="result-layout">
+
+      <!-- SCORE CARD -->
+
+      <div class="score-card">
+
+        <!-- DYNAMIC SCORE CIRCLE -->
+
+        <div
+          class="score-circle"
+          id="scoreCircle">
+
+          <svg
+            class="circle-svg"
+            width="170"
+            height="170">
+
+            <!-- BACKGROUND CIRCLE -->
+
+            <circle
+              class="bg"
+              cx="85"
+              cy="85"
+              r="70">
+            </circle>
+
+            <!-- PROGRESS CIRCLE -->
+
+            <circle
+              class="progress-ring"
+              cx="85"
+              cy="85"
+              r="70">
+            </circle>
+
+          </svg>
+
+          <!-- SCORE TEXT -->
+
+          <div class="score-content">
+
+            <div id="score">
+              0
+            </div>
+
+            <span>
+              ATS SCORE
+            </span>
+
+          </div>
+
+        </div>
+
+        <!-- GRADE -->
+
+        <div class="grade">
+          Grade: -
+        </div>
+
+      </div>
+
+      <!-- SUMMARY -->
+
+      <div class="summary-box">
+
+        <h3>
+          Summary
+        </h3>
+
+        <p id="feedback">
+
+          Your ATS analysis summary
+          will appear here after scanning.
+
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- SECTION SCORES -->
+
+    <h3 class="section-title">
+      Section Scores
+    </h3>
+
+    <div class="score-grid">
+
+      <!-- FORMATTING -->
+
+      <div class="score-item">
+
+        <div class="score-head">
+
+          <h4>
+            Formatting
+          </h4>
+
+          <span id="formattingScore">
+            0/100
+          </span>
+
+        </div>
+
+        <div class="progress">
+
+          <div id="formattingBar"></div>
+
+        </div>
+
+      </div>
+
+      <!-- KEYWORDS -->
+
+      <div class="score-item">
+
+        <div class="score-head">
+
+          <h4>
+            Keywords
+          </h4>
+
+          <span id="keywordsScore">
+            0/100
+          </span>
+
+        </div>
+
+        <div class="progress">
+
+          <div id="keywordsBar"></div>
+
+        </div>
+
+      </div>
+
+      <!-- EXPERIENCE -->
+
+      <div class="score-item">
+
+        <div class="score-head">
+
+          <h4>
+            Experience
+          </h4>
+
+          <span id="experienceScore">
+            0/100
+          </span>
+
+        </div>
+
+        <div class="progress">
+
+          <div id="experienceBar"></div>
+
+        </div>
+
+      </div>
+
+      <!-- SKILLS -->
+
+      <div class="score-item">
+
+        <div class="score-head">
+
+          <h4>
+            Skills
+          </h4>
+
+          <span id="skillsScore">
+            0/100
+          </span>
+
+        </div>
+
+        <div class="progress">
+
+          <div id="skillsBar"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- MISSING KEYWORDS -->
+
+    <div class="modal-section">
+
+      <h3>
+        Missing Keywords
+      </h3>
+
+      <ul id="keywords"></ul>
+
+    </div>
+
+    <!-- STRENGTHS -->
+
+    <div class="modal-section">
+
+      <h3>
+        Strengths
+      </h3>
+
+      <ul id="strengths"></ul>
+
+    </div>
+
+    <!-- IMPROVEMENTS -->
+
+    <div class="modal-section">
+
+      <h3>
+        Improvements
+      </h3>
+
+      <ul id="improvements"></ul>
+
+    </div>
+
+  </div>
+
+</div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="info-box">
+          <h3>What You'll Get</h3>
+          <ul>
+            <li>Overall ATS-style score and grade</li>
+            <li>Section-by-section scoring breakdown</li>
+            <li>ATS risks and why they matter</li>
+            <li>Missing keyword suggestions</li>
+            <li>Ready-to-use rewrite recommendations</li>
+          </ul>
+        </div>
+        <div class="privacy">
+          <h2>Privacy</h2>
+          <p>Uploaded files are sent for parsing and analysis, and the temporary uploaded file is deleted server-side
+            after extraction.</p>
+        </div>
+      </div>
+
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Resume Analyser</p>
+    <a href="#">Linkedin</a>
+    <a href="#">Github</a>
+    <a href="#">vansh.goel.in@gmail.com</a>
+  </footer>
+  <script src="index.js"></script>
+
+</body>
+
+</html>
