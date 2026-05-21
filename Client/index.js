@@ -1,6 +1,24 @@
+
+const API_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:3000/analyze"
+    : "https://atsbrain.onrender.com/analyze";
+
+/* INPUTS */
+
 const fileInput =
   document.getElementById(
     "ats_resume_file"
+  );
+
+const fileLabel =
+  document.getElementById(
+    "fileLabel"
+  );
+
+const resumeTextEl =
+  document.getElementById(
+    "ats_resume_text"
   );
 
 const jobDesc =
@@ -18,6 +36,8 @@ const resetBtn =
     ".reset-btn"
   );
 
+/* MODAL */
+
 const modal =
   document.getElementById(
     "modal"
@@ -27,6 +47,8 @@ const closeBtn =
   document.getElementById(
     "closeBtn"
   );
+
+/* RESULT ELEMENTS */
 
 const scoreEl =
   document.getElementById(
@@ -53,9 +75,7 @@ const improvementsEl =
     "improvements"
   );
 
-/* =========================
-   SECTION BARS
-========================= */
+/* SECTION BARS*/
 
 const formattingBar =
   document.getElementById(
@@ -77,9 +97,7 @@ const skillsBar =
     "skillsBar"
   );
 
-/* =========================
-   SECTION SCORES
-========================= */
+/*  SECTION SCORES */
 
 const formattingScore =
   document.getElementById(
@@ -101,18 +119,35 @@ const skillsScore =
     "skillsScore"
   );
 
-/* =========================
-   PROGRESS RING
-========================= */
+/* PROGRESS RING */
 
 const progressRing =
   document.querySelector(
     ".progress-ring"
   );
 
-/* =========================
-   OPEN MODAL
-========================= */
+/*  SHOW FILE NAME */
+
+fileInput.addEventListener(
+  "change",
+  () => {
+
+    if (
+      fileInput.files.length > 0
+    ) {
+
+      fileLabel.innerText =
+        fileInput.files[0].name;
+
+    } else {
+
+      fileLabel.innerText =
+        "Choose File";
+    }
+  }
+);
+
+/* OPEN MODAL*/
 
 function openModal() {
 
@@ -120,9 +155,7 @@ function openModal() {
     "flex";
 }
 
-/* =========================
-   CLOSE MODAL
-========================= */
+/* CLOSE MODAL */
 
 function closeModal() {
 
@@ -130,9 +163,7 @@ function closeModal() {
     "none";
 }
 
-/* =========================
-   SCORE CIRCLE
-========================= */
+/* SCORE CIRCLE */
 
 function animateScoreCircle(
   score
@@ -156,9 +187,7 @@ function animateScoreCircle(
     offset;
 }
 
-/* =========================
-   PROGRESS BARS
-========================= */
+/* PROGRESS BARS */
 
 function setProgress(
   bar,
@@ -173,9 +202,7 @@ function setProgress(
     `${value}/100`;
 }
 
-/* =========================
-   GRADE
-========================= */
+/* GRADE */
 
 function getGrade(score) {
 
@@ -198,18 +225,14 @@ function getGrade(score) {
   return "D";
 }
 
-/* =========================
-   CLOSE BUTTON
-========================= */
+/* CLOSE BUTTON */
 
 closeBtn.addEventListener(
   "click",
   closeModal
 );
 
-/* =========================
-   RESET
-========================= */
+/* RESET */
 
 resetBtn.addEventListener(
   "click",
@@ -217,11 +240,12 @@ resetBtn.addEventListener(
 
     fileInput.value = "";
 
-    jobDesc.value = "";
+    fileLabel.innerText =
+      "Choose File";
 
-    document.getElementById(
-      "ats_resume_text"
-    ).value = "";
+    resumeTextEl.value = "";
+
+    jobDesc.value = "";
 
     scoreEl.innerText = "0";
 
@@ -274,9 +298,7 @@ resetBtn.addEventListener(
   }
 );
 
-/* =========================
-   ANALYZE RESUME
-========================= */
+/* ANALYZE RESUME */
 
 checkBtn.addEventListener(
   "click",
@@ -286,9 +308,7 @@ checkBtn.addEventListener(
       fileInput.files[0];
 
     const resumeText =
-      document.getElementById(
-        "ats_resume_text"
-      ).value;
+      resumeTextEl.value;
 
     const jd =
       jobDesc.value;
@@ -302,6 +322,15 @@ checkBtn.addEventListener(
 
       alert(
         "Upload resume or paste text"
+      );
+
+      return;
+    }
+
+    if (!jd) {
+
+      alert(
+        "Job description required"
       );
 
       return;
@@ -348,7 +377,7 @@ checkBtn.addEventListener(
 
       const response =
         await fetch(
-          "/analyze",
+          API_URL,
           {
             method: "POST",
             body: formData,
@@ -373,9 +402,7 @@ checkBtn.addEventListener(
       const analysis =
         data.analysis;
 
-      /* =========================
-         FINAL SCORE
-      ========================= */
+      /* FINAL SCORE */
 
       const finalScore =
         analysis.score ?? 0;
@@ -387,9 +414,7 @@ checkBtn.addEventListener(
         finalScore
       );
 
-      /* =========================
-         GRADE
-      ========================= */
+      /* GRADE */
 
       document.querySelector(
         ".grade"
@@ -398,17 +423,13 @@ checkBtn.addEventListener(
           finalScore
         )}`;
 
-      /* =========================
-         SUMMARY
-      ========================= */
+      /* SUMMARY */
 
       feedbackEl.innerText =
         analysis.summary ||
         "Analysis completed successfully.";
 
-      /* =========================
-         SECTION SCORES
-      ========================= */
+      /* SECTION SCORES */
 
       const formatting =
         analysis.sectionScores
@@ -430,9 +451,7 @@ checkBtn.addEventListener(
           ?.skills
             ?? finalScore;
 
-      /* =========================
-         ANIMATE PROGRESS
-      ========================= */
+      /*  ANIMATE PROGRESS */
 
       setTimeout(() => {
 
@@ -462,51 +481,55 @@ checkBtn.addEventListener(
 
       }, 100);
 
-      /* =========================
-         MISSING KEYWORDS
-      ========================= */
+      /* MISSING KEYWORDS */
 
       keywordsEl.innerHTML =
-        analysis.missingKeywords
-          ?.map(
-            item =>
-              `<li>${item}</li>`
-          )
-          .join("") || "";
+        Array.isArray(
+          analysis.missingKeywords
+        )
+          ? analysis.missingKeywords
+              .map(
+                item =>
+                  `<li>${item}</li>`
+              )
+              .join("")
+          : "";
 
-      /* =========================
-         STRENGTHS
-      ========================= */
+      /* STRENGTHS */
 
       strengthsEl.innerHTML =
-        analysis.strengths
-          ?.map(
-            item =>
-              `<li>${item}</li>`
-          )
-          .join("") || "";
+        Array.isArray(
+          analysis.strengths
+        )
+          ? analysis.strengths
+              .map(
+                item =>
+                  `<li>${item}</li>`
+              )
+              .join("")
+          : "";
 
-      /* =========================
-         IMPROVEMENTS
-      ========================= */
+      /*  IMPROVEMENTS*/
 
       improvementsEl.innerHTML =
-        analysis.improvements
-          ?.map(
-            item =>
-              `<li>${item}</li>`
-          )
-          .join("") || "";
+        Array.isArray(
+          analysis.improvements
+        )
+          ? analysis.improvements
+              .map(
+                item =>
+                  `<li>${item}</li>`
+              )
+              .join("")
+          : "";
 
-      /* =========================
-         OPEN MODAL
-      ========================= */
+      /* OPEN MODAL*/
 
       openModal();
 
     } catch (err) {
 
-      console.log(err);
+      console.error(err);
 
       alert(
         "Something went wrong"

@@ -17,11 +17,25 @@ async function extractResumeText(file) {
     const dataBuffer =
       fs.readFileSync(file.path);
 
-    const pdfData =
-      await pdfParse(dataBuffer);
+    try {
 
-    resumeText =
-      pdfData.text;
+  const pdfData =
+    await pdfParse(dataBuffer);
+
+  resumeText =
+    pdfData.text;
+
+} catch (err) {
+
+  console.error(
+    "PDF Parse Error:",
+    err.message
+  );
+
+  throw new Error(
+    "Failed to read PDF. Please upload a valid PDF or use DOCX."
+  );
+}
   }
 
   else if (

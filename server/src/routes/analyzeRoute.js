@@ -12,18 +12,60 @@ const {
 
 const router = express.Router();
 
+/* =========================
+   MULTER CONFIG
+========================= */
+
+const allowedMimeTypes = [
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "text/plain",
+];
+
 const upload = multer({
   dest: "uploads/",
+
   limits: {
     fileSize: 5 * 1024 * 1024,
   },
+
+  fileFilter: (req, file, cb) => {
+
+    if (
+      !allowedMimeTypes.includes(
+        file.mimetype
+      )
+    ) {
+      return cb(
+        new Error(
+          "Only PDF, DOCX, and TXT files are allowed"
+        )
+      );
+    }
+
+    cb(null, true);
+  },
 });
 
-router.post(
-  "/analyze",
-  upload.single("resume"),
+/* =========================
+   ROUTE
+========================= */
 
-  async (req, res) => {
+router.post("/analyze", (req, res) => {
+
+  upload.single("resume")(req, res, async (err) => {
+
+    /* =========================
+       MULTER ERROR
+    ========================= */
+
+    if (err) {
+
+      return res.status(400).json({
+        success: false,
+        error: err.message,
+      });
+    }
 
     const file = req.file;
 
@@ -34,9 +76,14 @@ router.post(
         resumeText,
       } = req.body;
 
+      /* =========================
+         VALIDATION
+      ========================= */
+
       if (!file && !resumeText) {
 
         return res.status(400).json({
+          success: false,
           error:
             "Upload resume or paste resume text",
         });
@@ -45,12 +92,17 @@ router.post(
       if (!jobDescription) {
 
         return res.status(400).json({
+          success: false,
           error:
             "Job description required",
         });
       }
 
       let finalResumeText = "";
+
+      /* =========================
+         EXTRACT RESUME
+      ========================= */
 
       if (file) {
 
@@ -63,38 +115,78 @@ router.post(
           resumeText;
       }
 
+      /* =========================
+         EMPTY EXTRACTION CHECK
+      ========================= */
+
+      if (
+        !finalResumeText ||
+        finalResumeText.length < 50
+      ) {
+
+        return res.status(400).json({
+          success: false,
+          error:
+            "Could not extract readable resume text",
+        });
+      }
+
+      /* =========================
+         AI ANALYSIS
+      ========================= */
+
       const analysis =
         await analyzeResume(
           finalResumeText,
           jobDescription
         );
 
-      res.json({
+      return res.json({
         success: true,
         analysis,
       });
 
     } catch (err) {
 
-      console.log(err);
+      console.error({
+        message: err.message,
+        stack: err.stack,
+      });
 
-      res.status(500).json({
+      return res.status(500).json({
+        success: false,
         error:
           err.message ||
-          "Server Error",
+          "Internal Server Error",
       });
 
     } finally {
 
-      if (
-        file?.path &&
-        fs.existsSync(file.path)
-      ) {
+      /* =========================
+         CLEANUP
+      ========================= */
 
-        fs.unlinkSync(file.path);
+      try {
+
+        if (
+          file?.path &&
+          fs.existsSync(file.path)
+        ) {
+
+          await fs.promises.unlink(
+            file.path
+          );
+        }
+
+      } catch (cleanupErr) {
+
+        console.error(
+          "File cleanup error:",
+          cleanupErr.message
+        );
       }
     }
-  }
-);
+  });
+});
 
 module.exports = router;

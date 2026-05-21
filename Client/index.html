@@ -15,11 +15,6 @@
 
   <header class="header">
     <span class="ats-title">ATSBrain</span>
-    <span>Home</span>
-    <span>Template</span>
-    <span>Services</span>
-    <span>Login</span>
-    <span>Signup</span>
   
   </header>
 
@@ -40,9 +35,21 @@
             <i class="ri-upload-line upload-image"></i>
             <p>Drag & drop your resume here</p>
             <h3>PDF, DOCX, or TXT • or click below to browse</h3>
-            <label for="ats_resume_file" class="upload-btn">
-                 Choose File
-            </label>
+            
+      <label
+        for="ats_resume_file"
+        class="upload-btn"
+        id="fileLabel">
+
+        Choose File
+      </label>
+      <input
+        type="file"
+        id="ats_resume_file"
+        accept=".pdf,.docx,.txt"
+        hidden
+      />
+          
             <input type="file" id="ats_resume_file" accept=".pdf,.docx,.txt" hidden>
           </div>
           <p>Tip: If PDF extraction returns empty text on your server, upload DOCX or paste resume text below</p>
@@ -343,9 +350,9 @@
 
   <footer class="footer">
     <p>© 2026 Resume Analyser</p>
-    <a href="#">Linkedin</a>
-    <a href="#">Github</a>
-    <a href="#">vansh.goel.in@gmail.com</a>
+    <a href="https://www.linkedin.com/in/vansh-goel-06a7401ab">Linkedin</a>
+    <a href="https://github.com/Vanshgoe">Github</a>
+    <a href="https://vanshgoel.vercel.app/">vansh.goel.in@gmail.com</a>
   </footer>
   <script src="index.js"></script>
 
